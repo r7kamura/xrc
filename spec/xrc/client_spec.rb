@@ -1,12 +1,31 @@
 require "spec_helper"
 
 describe Xrc::Client do
-  let(:client) do
-    described_class.new(options)
+  after do
+    server.close
+  end
+
+  let!(:server) do
+    TCPServer.new(port)
+  end
+
+  let(:instance) do
+    described_class.new(*args)
+  end
+
+  let(:args) do
+    [options]
   end
 
   let(:options) do
-    { jid: jid }
+    {
+      jid: jid,
+      port: port,
+    }
+  end
+
+  let(:port) do
+    5222
   end
 
   let(:jid) do
@@ -18,19 +37,16 @@ describe Xrc::Client do
   end
 
   let(:domain) do
-    "example.com"
+    "localhost"
   end
 
   let(:resource) do
     "bot"
   end
 
-  describe "#initialize" do
-    it "takes :jid string option as an account's JID" do
-      client.should be_true
-      client.jid.node.should == node
-      client.jid.domain.should == domain
-      client.jid.resource.should == resource
+  describe "#connect" do
+    it "connects to XMPP server via TCP socket" do
+      instance.connect.should be_a TCPSocket
     end
   end
 end
