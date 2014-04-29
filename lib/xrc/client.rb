@@ -10,11 +10,15 @@ module Xrc
 
     def run
       connect
-      parser.parse
+      wait
     end
 
     def connect
       socket
+    end
+
+    def wait
+      parser.parse
     end
 
     def parser
