@@ -1,5 +1,3 @@
-require "socket"
-
 module Xrc
   class Client
     DEFAULT_PORT = 5222
@@ -18,21 +16,16 @@ module Xrc
       @jid ||= Jid.new(options[:jid])
     end
 
-    def hosts
-      HostsResolver.call(jid.domain)
-    end
-
     def port
       options[:port] || DEFAULT_PORT
     end
 
     def socket
-      hosts.find do |host|
-        begin
-          break TCPSocket.new(host, port)
-        rescue SocketError, Errno::ECONNREFUSED
-        end
-      end
+      connector.connect
+    end
+
+    def connector
+      Connector.new(domain: jid.domain, port: port)
     end
   end
 end
