@@ -8,8 +8,17 @@ module Xrc
       @options = options
     end
 
+    def run
+      connect
+      parser.parse
+    end
+
     def connect
       socket
+    end
+
+    def parser
+      @parser ||= Parser.new(socket)
     end
 
     def jid
@@ -21,8 +30,10 @@ module Xrc
     end
 
     def socket
-      connector.connect
+      @socket ||= connector.connect
     end
+
+    private
 
     def connector
       Connector.new(domain: jid.domain, port: port)
