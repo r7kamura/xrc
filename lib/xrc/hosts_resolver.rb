@@ -19,9 +19,7 @@ module Xrc
     private
 
     def resolved_hosts
-      sorted_srvs.map do |srv|
-        srv.target.to_s
-      end
+      sorted_srvs.lazy.map(&:target).map(&:to_s).to_a
     end
 
     def sorted_srvs
