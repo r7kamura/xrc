@@ -1,3 +1,5 @@
+require "rexml/document"
+require "rexml/element"
 require "rexml/parsers/sax2parser"
 
 module Xrc
@@ -47,7 +49,9 @@ module Xrc
     end
 
     log :start_element do |uri, localname, qname, attributes|
-      "Parsed <#{qname}>"
+      element = REXML::Element.new(qname)
+      element.add_attributes(attributes)
+      "Parsed #{element}"
     end
   end
 end
