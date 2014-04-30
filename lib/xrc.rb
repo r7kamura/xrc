@@ -1,3 +1,5 @@
+require "xrc/method_loggable"
+require "xrc/core_ext/module"
 require "xrc/client"
 require "xrc/connector"
 require "xrc/hosts_resolver"

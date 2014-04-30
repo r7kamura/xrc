@@ -28,23 +28,26 @@ module Xrc
     end
 
     def cdata(text)
-      puts "#{self.class}##{__method__}(#{text.inspect})"
     end
 
     def characters(text)
-      puts "#{self.class}##{__method__}(#{text.inspect})"
     end
 
     def end_document
-      puts "#{self.class}##{__method__}"
     end
 
     def end_element(uri, localname, qname)
-      puts "#{self.class}##{__method__}(#{uri.inspect}, #{localname.inspect}, #{qname.inspect})"
+    end
+
+    log :end_element do |uri, localname, qname|
+      "Parsed </#{qname}>"
     end
 
     def start_element(uri, localname, qname, attributes)
-      puts "#{self.class}##{__method__}(#{uri.inspect}, #{localname.inspect}, #{qname.inspect}, #{attributes.inspect})"
+    end
+
+    log :start_element do |uri, localname, qname, attributes|
+      "Parsed <#{qname}>"
     end
   end
 end

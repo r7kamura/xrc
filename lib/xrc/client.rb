@@ -18,8 +18,16 @@ module Xrc
       socket
     end
 
+    log :connect do
+      "Connecting to #{domain}:#{port}"
+    end
+
     def wait
       parser.parse
+    end
+
+    log :wait do
+      "Waiting for message"
     end
 
     def parser
@@ -50,6 +58,10 @@ module Xrc
 
     def start
       socket << start_message
+    end
+
+    log :start do
+      "Starting stream"
     end
 
     def start_message
