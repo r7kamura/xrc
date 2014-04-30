@@ -10,6 +10,7 @@ module Xrc
 
     def run
       connect
+      start
       wait
     end
 
@@ -40,7 +41,26 @@ module Xrc
     private
 
     def connector
-      Connector.new(domain: jid.domain, port: port)
+      Connector.new(domain: domain, port: port)
+    end
+
+    def domain
+      jid.domain
+    end
+
+    def start
+      socket << start_message
+    end
+
+    def start_message
+      %W[
+        <stream:stream
+        xmlns:stream="http://etherx.jabber.org/streams"
+        xmlns="jabber:client"
+        to="#{domain}"
+        xml:lang="en"
+        version="1.0">
+      ].join(" ")
     end
   end
 end

@@ -10,9 +10,8 @@ module Xrc
 
     def connect
       hosts.find do |host|
-        begin
-          break TCPSocket.new(host, port)
-        rescue SocketError, Errno::ECONNREFUSED
+        if socket = connect_to(host)
+          break socket
         end
       end
     end
@@ -29,6 +28,11 @@ module Xrc
 
     def hosts
       HostsResolver.call(domain)
+    end
+
+    def connect_to(host)
+      TCPSocket.new(host, port)
+    rescue SocketError, Errno::ECONNREFUSED => exception
     end
   end
 end
