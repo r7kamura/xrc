@@ -46,7 +46,7 @@ module Xrc
     end
 
     def end_element(uri, localname, qname)
-      consume if focusing_top_level_element?
+      consume if has_current? && !has_parent?
       pop
     end
 
@@ -74,10 +74,6 @@ module Xrc
 
     def consume
       client.receive(current)
-    end
-
-    def focusing_top_level_element?
-      has_current? && !has_parent?
     end
 
     def has_current?
