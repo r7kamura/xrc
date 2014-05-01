@@ -46,8 +46,13 @@ module Xrc
       @socket ||= connector.connect
     end
 
-    # TODO
     def receive(element)
+      case
+      when element.prefix == "stream" && element.name == "features"
+        element.each do |feature|
+          features[feature.name] = feature.namespace
+        end
+      end
     end
 
     log :receive do |element|
@@ -55,6 +60,10 @@ module Xrc
     end
 
     private
+
+    def features
+      @features ||= {}
+    end
 
     def connector
       Connector.new(domain: domain, port: port)

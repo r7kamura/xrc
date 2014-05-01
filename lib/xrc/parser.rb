@@ -60,7 +60,7 @@ module Xrc
 
     def push(element)
       if current
-        current.add_element(element)
+        self.current = current.add_element(element)
       else
         self.current = element
       end
