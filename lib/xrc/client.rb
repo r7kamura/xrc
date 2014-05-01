@@ -26,10 +26,6 @@ module Xrc
       parser.parse
     end
 
-    log :wait do
-      "Waiting for message"
-    end
-
     def parser
       @parser ||= Parser.new(socket, client: self)
     end
