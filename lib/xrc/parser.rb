@@ -12,14 +12,21 @@ module Xrc
       :start_element,
     ]
 
-    attr_reader :reader
+    attr_accessor :current
 
-    def initialize(*args)
-      super
+    attr_reader :options
+
+    def initialize(socket, options = {})
+      super(socket)
+      @options = options
       bind
     end
 
     private
+
+    def client
+      options[:client]
+    end
 
     def bind
       EVENTS.each do |event|
@@ -39,19 +46,46 @@ module Xrc
     end
 
     def end_element(uri, localname, qname)
-    end
-
-    log :end_element do |uri, localname, qname|
-      "Parsed </#{qname}>"
+      consume if focusing_top_level_element?
+      pop
     end
 
     def start_element(uri, localname, qname, attributes)
+      if qname != "stream:stream"
+        element = REXML::Element.new(qname)
+        element.add_attributes(attributes)
+        push(element)
+      end
     end
 
-    log :start_element do |uri, localname, qname, attributes|
-      element = REXML::Element.new(qname)
-      element.add_attributes(attributes)
-      "Parsed #{element}"
+    def push(element)
+      if current
+        current.add_element(element)
+      else
+        self.current = element
+      end
+    end
+
+    def pop
+      if current
+        self.current = current.parent
+      end
+    end
+
+    def consume
+      client.receive(current)
+    end
+
+    def focusing_top_level_element?
+      has_current? && !has_parent?
+    end
+
+    def has_current?
+      !!current
+    end
+
+    def has_parent?
+      !current.parent.nil?
     end
   end
 end

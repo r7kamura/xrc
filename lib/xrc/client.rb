@@ -31,7 +31,7 @@ module Xrc
     end
 
     def parser
-      @parser ||= Parser.new(socket)
+      @parser ||= Parser.new(socket, client: self)
     end
 
     def jid
@@ -44,6 +44,14 @@ module Xrc
 
     def socket
       @socket ||= connector.connect
+    end
+
+    # TODO
+    def receive(element)
+    end
+
+    log :receive do |element|
+      "Received #{element}"
     end
 
     private
