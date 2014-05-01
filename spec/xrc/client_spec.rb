@@ -49,13 +49,16 @@ describe Xrc::Client do
   let(:socket) do
     StringIO.new <<-EOS.strip_heredoc
       <?xml version="1.0" encoding="UTF-8"?>
-      <!-- Edited by XMLSpy -->
-      <note>
-        <to>Tove</to>
-        <from>Jani</from>
-        <heading>Reminder</heading>
-        <body>Don't forget me this weekend!</body>
-      </note>
+      <stream:stream
+        from='#{domain}'
+        id='5d29a171a9472e73'
+        xmlns:stream='http://etherx.jabber.org/streams'
+        version='1.0'
+        xmlns='jabber:client'>
+        <stream:features>
+          <starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+          <required/>
+        </stream:features>
     EOS
   end
 
@@ -67,11 +70,11 @@ describe Xrc::Client do
 
   describe "#run" do
     before do
+      pending
       instance.stub(socket: socket)
     end
 
     it "parses received XML message" do
-      instance.parser.should_receive(:end_document)
       instance.run
     end
   end
