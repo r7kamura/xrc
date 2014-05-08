@@ -4,11 +4,15 @@ module Xrc
 
     BIND_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-bind"
 
+    ROSTER_NAMESPACE = "jabber:iq:roster"
+
     SASL_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-sasl"
 
     SESSION_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-session"
 
     TLS_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-tls"
+
+    attr_accessor :users
 
     attr_reader :options
 
@@ -46,6 +50,7 @@ module Xrc
     def on_bound(element)
       set_jid(element.elements["/bind/jid/text()"])
       establish_session
+      require_roster
     end
 
     def set_jid(jid)
@@ -258,6 +263,20 @@ module Xrc
 
     def establish_session
       post_with_id(Elements::SessionIq.new)
+    end
+
+    def require_roster
+      post_with_id(Elements::RosterIq.new, &method(:on_roster_received))
+    end
+
+    def on_roster_received(element)
+      self.users = element.elements.collect("query/item") do |item|
+        {
+          jid: item.attribute("jid").value,
+          mention_name: item.attribute("mention_name").value,
+          name: item.attribute("name").value,
+        }
+      end
     end
   end
 end
