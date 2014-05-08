@@ -38,7 +38,9 @@ module Xrc
 
     def change_socket
       @socket = tsl_connector.connect
+      start
       regenerate_parser
+      wait
     end
 
     log :change_socket do
