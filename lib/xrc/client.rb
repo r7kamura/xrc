@@ -46,9 +46,6 @@ module Xrc
         when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
           start_tls
         when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
-          feature.each_element("mechanism") do |mechanism|
-            mechanisms << mechanism.text
-          end
           on_mechanisms_received(feature)
         else
           features[feature.name] = feature.namespace
@@ -86,6 +83,9 @@ module Xrc
     end
 
     def on_mechanisms_received(element)
+      element.each_element("mechanism") do |mechanism|
+        mechanisms << mechanism.text
+      end
       authenticate if has_password?
     end
 
