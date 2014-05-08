@@ -99,10 +99,6 @@ module Xrc
 
     private
 
-    def features
-      @features ||= {}
-    end
-
     def connector
       Connector.new(domain: domain, port: port)
     end
