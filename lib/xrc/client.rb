@@ -1,9 +1,12 @@
 require "active_support/core_ext/string/indent"
 require "base64"
+require "securerandom"
 
 module Xrc
   class Client
     DEFAULT_PORT = 5222
+
+    BIND_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-bind"
 
     SASL_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-sasl"
 
@@ -43,6 +46,8 @@ module Xrc
     def on_features_received(element)
       element.each do |feature|
         case
+        when feature.name == "bind" && feature.namespace == BIND_NAMESPACE
+          bind
         when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
           start_tls
         when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
@@ -204,6 +209,25 @@ module Xrc
         xml:lang="en"
         version="1.0">
       ].join(" ")
+    end
+
+    def bind
+      bind = REXML::Element.new("bind")
+      bind.add_namespace(BIND_NAMESPACE)
+      if jid.resource
+        resource = REXML::Element.new("resource")
+        resource.text = jid.resource
+        bind.add(resource)
+      end
+      iq = REXML::Element.new("iq")
+      iq.add_attributes("type" => "set", "id" => generate_id)
+      iq.add(bind)
+      post(iq)
+    end
+
+    # See RFC1750 for Randomness Recommendations for Security
+    def generate_id
+      SecureRandom.hex(8)
     end
   end
 end
