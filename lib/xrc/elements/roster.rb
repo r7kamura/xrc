@@ -1,6 +1,6 @@
 module Xrc
   module Elements
-    class RosterIq < REXML::Element
+    class Roster < REXML::Element
       def initialize
         super("iq")
         query = REXML::Element.new("query")

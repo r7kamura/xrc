@@ -1,6 +1,6 @@
 module Xrc
   module Elements
-    class BindIq < REXML::Element
+    class Bind < REXML::Element
       def initialize(options = {})
         super("iq")
         bind = REXML::Element.new("bind")

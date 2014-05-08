@@ -245,7 +245,7 @@ module Xrc
     end
 
     def bind
-      post_with_id(Elements::BindIq.new(resource: jid.resource), &method(:on_bound))
+      post_with_id(Elements::Bind.new(resource: jid.resource), &method(:on_bound))
     end
 
     def reply_callbacks
@@ -262,11 +262,11 @@ module Xrc
     end
 
     def establish_session
-      post_with_id(Elements::SessionIq.new)
+      post_with_id(Elements::Session.new)
     end
 
     def require_roster
-      post_with_id(Elements::RosterIq.new, &method(:on_roster_received))
+      post_with_id(Elements::Roster.new, &method(:on_roster_received))
     end
 
     def on_roster_received(element)

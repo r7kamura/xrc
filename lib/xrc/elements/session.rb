@@ -1,6 +1,6 @@
 module Xrc
   module Elements
-    class SessionIq < REXML::Element
+    class Session < REXML::Element
       def initialize
         super("iq")
         session = REXML::Element.new("session")
