@@ -10,6 +10,8 @@ module Xrc
 
     SASL_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-sasl"
 
+    SESSION_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-session"
+
     TLS_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-tls"
 
     attr_reader :options
@@ -47,6 +49,7 @@ module Xrc
 
     def on_bound(element)
       set_jid(element.elements["/bind/jid/text()"])
+      establish_session
     end
 
     def set_jid(jid)
@@ -265,6 +268,15 @@ module Xrc
     # See RFC1750 for Randomness Recommendations for Security
     def generate_id
       SecureRandom.hex(8)
+    end
+
+    def establish_session
+      session = REXML::Element.new("session")
+      session.add_namespace(SESSION_NAMESPACE)
+      iq = REXML::Element.new("iq")
+      iq.add_attributes("type" => "set")
+      iq.add(session)
+      post_with_id(iq)
     end
   end
 end
