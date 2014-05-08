@@ -1,7 +1,3 @@
-require "rexml/document"
-require "rexml/element"
-require "rexml/parsers/sax2parser"
-
 module Xrc
   class Parser < REXML::Parsers::SAX2Parser
     EVENTS = [

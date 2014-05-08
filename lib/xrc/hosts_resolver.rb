@@ -1,5 +1,3 @@
-require "resolv"
-
 module Xrc
   class HostsResolver
     def self.call(*args)

@@ -1,5 +1,3 @@
-require "socket"
-
 module Xrc
   class Connector
     attr_reader :options

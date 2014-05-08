@@ -1,5 +1,3 @@
-require "openssl"
-
 module Xrc
   class TslConnector
     attr_reader :options

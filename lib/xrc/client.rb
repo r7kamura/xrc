@@ -1,7 +1,3 @@
-require "active_support/core_ext/string/indent"
-require "base64"
-require "securerandom"
-
 module Xrc
   class Client
     DEFAULT_PORT = 5222
@@ -244,17 +240,7 @@ module Xrc
     end
 
     def bind
-      bind = REXML::Element.new("bind")
-      bind.add_namespace(BIND_NAMESPACE)
-      if jid.resource
-        resource = REXML::Element.new("resource")
-        resource.text = jid.resource
-        bind.add(resource)
-      end
-      iq = REXML::Element.new("iq")
-      iq.add_attributes("type" => "set")
-      iq.add(bind)
-      post_with_id(iq, &method(:on_bound))
+      post_with_id(Elements::BindIq.new(resource: jid.resource), &method(:on_bound))
     end
 
     def reply_callbacks
@@ -271,12 +257,7 @@ module Xrc
     end
 
     def establish_session
-      session = REXML::Element.new("session")
-      session.add_namespace(SESSION_NAMESPACE)
-      iq = REXML::Element.new("iq")
-      iq.add_attributes("type" => "set")
-      iq.add(session)
-      post_with_id(iq)
+      post_with_id(Elements::SessionIq.new)
     end
   end
 end
