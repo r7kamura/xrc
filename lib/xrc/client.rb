@@ -199,7 +199,12 @@ module Xrc
       "Posting:\n" + element.to_s.indent(2)
     end
 
-    # Dirty
+    def post_with_id(element)
+      element.add_attributes("id" => generate_id)
+      post(element)
+    end
+
+    # This is a special element that has neither any children nor /> section.
     def start_message
       %W[
         <stream:stream
@@ -220,9 +225,9 @@ module Xrc
         bind.add(resource)
       end
       iq = REXML::Element.new("iq")
-      iq.add_attributes("type" => "set", "id" => generate_id)
+      iq.add_attributes("type" => "set")
       iq.add(bind)
-      post(iq)
+      post_with_id(iq)
     end
 
     # See RFC1750 for Randomness Recommendations for Security
