@@ -59,9 +59,11 @@ module Xrc
     end
 
     def start_element(uri, localname, qname, attributes)
-      if qname != "stream:stream"
-        element = REXML::Element.new(qname)
-        element.add_attributes(attributes)
+      element = REXML::Element.new(qname)
+      element.add_attributes(attributes)
+      if qname == "stream:stream"
+        client.receive(element)
+      else
         push(element)
       end
     end
