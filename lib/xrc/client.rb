@@ -29,7 +29,7 @@ module Xrc
     def start_tls
       element = REXML::Element.new("starttls")
       element.add_namespace("urn:ietf:params:xml:ns:xmpp-tls")
-      socket << element.to_s
+      post(element)
     end
 
     log :start_tls do
@@ -114,11 +114,19 @@ module Xrc
     end
 
     def start
-      socket << start_message
+      post(start_message)
     end
 
     log :start do
       "Starting stream"
+    end
+
+    def post(element)
+      socket << element.to_s
+    end
+
+    log :post do |element|
+      "Posting:\n" + element.to_s.indent(2)
     end
 
     # Dirty
