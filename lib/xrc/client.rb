@@ -26,6 +26,8 @@ module Xrc
 
     def receive(element)
       case
+      when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
+        on_replied(element)
       when element.prefix == "stream" && element.name == "features"
         on_features_received(element)
       when element.name == "proceed" && element.namespace == TLS_NAMESPACE
@@ -42,6 +44,12 @@ module Xrc
     end
 
     private
+
+    def on_replied(element)
+      id = element.attribute("id").value
+      callback = reply_callbacks.delete(id)
+      callback.call(element)
+    end
 
     def on_features_received(element)
       element.each do |feature|
@@ -199,8 +207,12 @@ module Xrc
       "Posting:\n" + element.to_s.indent(2)
     end
 
-    def post_with_id(element)
-      element.add_attributes("id" => generate_id)
+    def post_with_id(element, &block)
+      id = generate_id
+      element.add_attributes("id" => id)
+      if block
+        reply_callbacks[id] = block
+      end
       post(element)
     end
 
@@ -227,7 +239,17 @@ module Xrc
       iq = REXML::Element.new("iq")
       iq.add_attributes("type" => "set")
       iq.add(bind)
-      post_with_id(iq)
+      post_with_id(iq) do |element|
+        # TODO
+      end
+    end
+
+    def reply_callbacks
+      @reply_callbacks ||= {}
+    end
+
+    def has_reply_callbacks_to?(id)
+      reply_callbacks.has_key?(id)
     end
 
     # See RFC1750 for Randomness Recommendations for Security
