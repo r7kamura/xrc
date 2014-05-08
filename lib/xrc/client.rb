@@ -4,6 +4,8 @@ module Xrc
   class Client
     DEFAULT_PORT = 5222
 
+    SASL_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-sasl"
+
     TLS_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-tls"
 
     attr_reader :options
@@ -84,8 +86,15 @@ module Xrc
       case
       when element.prefix == "stream" && element.name == "features"
         element.each do |feature|
-          if feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
+          case
+          when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
             start_tls
+          when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
+            feature.each_element("mechanism") do |mechanism|
+              mechanisms << mechanism.text
+            end
+          else
+            features[feature.name] = feature.namespace
           end
         end
       when element.name == "proceed" && element.namespace == TLS_NAMESPACE
@@ -98,6 +107,14 @@ module Xrc
     end
 
     private
+
+    def features
+      @features ||= {}
+    end
+
+    def mechanisms
+      @mechanisms ||= []
+    end
 
     def connector
       Connector.new(domain: domain, port: port)
