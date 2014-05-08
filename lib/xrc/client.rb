@@ -4,6 +4,8 @@ module Xrc
   class Client
     DEFAULT_PORT = 5222
 
+    TLS_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-tls"
+
     attr_reader :options
 
     def initialize(options = {})
@@ -24,12 +26,43 @@ module Xrc
       "Connecting to #{domain}:#{port}"
     end
 
+    def start_tls
+      element = REXML::Element.new("starttls")
+      element.add_namespace("urn:ietf:params:xml:ns:xmpp-tls")
+      socket << element.to_s
+    end
+
+    log :start_tls do
+      "Start TLS connection"
+    end
+
+    def change_socket
+      @socket = tsl_connector.connect
+      regenerate_parser
+    end
+
+    log :change_socket do
+      "Changing socket to TSL socket"
+    end
+
     def wait
       parser.parse
     end
 
     def parser
-      @parser ||= Parser.new(socket, client: self)
+      @parser ||= generate_parser
+    end
+
+    def generate_parser
+      Parser.new(socket, client: self)
+    end
+
+    def regenerate_parser
+      @parser = generate_parser
+    end
+
+    log :regenerate_parser do
+      "Regenerating parser"
     end
 
     def jid
@@ -44,12 +77,17 @@ module Xrc
       @socket ||= connector.connect
     end
 
+    # Dirty
     def receive(element)
       case
       when element.prefix == "stream" && element.name == "features"
         element.each do |feature|
-          features[feature.name] = feature.namespace
+          if feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
+            start_tls
+          end
         end
+      when element.name == "proceed" && element.namespace == TLS_NAMESPACE
+        change_socket
       end
     end
 
@@ -67,6 +105,10 @@ module Xrc
       Connector.new(domain: domain, port: port)
     end
 
+    def tsl_connector
+      TslConnector.new(socket: socket)
+    end
+
     def domain
       jid.domain
     end
@@ -79,6 +121,7 @@ module Xrc
       "Starting stream"
     end
 
+    # Dirty
     def start_message
       %W[
         <stream:stream
