@@ -1,3 +1,5 @@
+require "active_support/core_ext/string/indent"
+
 module Xrc
   class Client
     DEFAULT_PORT = 5222
@@ -52,7 +54,7 @@ module Xrc
     end
 
     log :receive do |element|
-      "Received #{element}"
+      "Received:\n" + "#{REXML::Formatters::Pretty.new(2).write(element, '')}".indent(2)
     end
 
     private
