@@ -6,8 +6,8 @@ XMPP Ruby Client.
 require "xrc"
 
 client = Xrc::Client.new(
-  jid: YOUR_JID, # e.g. "foo@example.com"
-  password: YOUR_PASSWORD, # optional
+  jid: "foo@example.com", # required
+  password: "xxx",        # optional
 )
 client.run
 ```
