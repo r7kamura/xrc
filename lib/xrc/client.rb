@@ -271,12 +271,21 @@ module Xrc
 
     def on_roster_received(element)
       self.users = element.elements.collect("query/item") do |item|
-        {
+        OpenStruct.new(
           jid: item.attribute("jid").value,
           mention_name: item.attribute("mention_name").value,
           name: item.attribute("name").value,
-        }
+        )
       end
+      attend
+    end
+
+    def users_indexed_by_jid
+      @users_indexed_by_jid ||= users.index_by(&:jid)
+    end
+
+    def attend
+      post(Elements::Presence.new)
     end
   end
 end
