@@ -20,6 +20,33 @@ module Xrc
       wait
     end
 
+    # Dirty
+    def receive(element)
+      case
+      when element.prefix == "stream" && element.name == "features"
+        element.each do |feature|
+          case
+          when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
+            start_tls
+          when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
+            feature.each_element("mechanism") do |mechanism|
+              mechanisms << mechanism.text
+            end
+          else
+            features[feature.name] = feature.namespace
+          end
+        end
+      when element.name == "proceed" && element.namespace == TLS_NAMESPACE
+        change_socket
+      end
+    end
+
+    log :receive do |element|
+      "Received:\n" + "#{REXML::Formatters::Pretty.new(2).write(element, '')}".indent(2)
+    end
+
+    private
+
     def connect
       socket
     end
@@ -80,33 +107,6 @@ module Xrc
     def socket
       @socket ||= connector.connect
     end
-
-    # Dirty
-    def receive(element)
-      case
-      when element.prefix == "stream" && element.name == "features"
-        element.each do |feature|
-          case
-          when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
-            start_tls
-          when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
-            feature.each_element("mechanism") do |mechanism|
-              mechanisms << mechanism.text
-            end
-          else
-            features[feature.name] = feature.namespace
-          end
-        end
-      when element.name == "proceed" && element.namespace == TLS_NAMESPACE
-        change_socket
-      end
-    end
-
-    log :receive do |element|
-      "Received:\n" + "#{REXML::Formatters::Pretty.new(2).write(element, '')}".indent(2)
-    end
-
-    private
 
     def features
       @features ||= {}
