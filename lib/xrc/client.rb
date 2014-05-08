@@ -57,10 +57,6 @@ module Xrc
       @jid = Jid.new(jid)
     end
 
-    log :set_jid do |jid|
-      "Updated JID with #{jid}"
-    end
-
     def on_replied(element)
       id = element.attribute("id").value
       callback = reply_callbacks.delete(id)
@@ -140,19 +136,11 @@ module Xrc
       post(element)
     end
 
-    log :start_tls do
-      "Start TLS connection"
-    end
-
     def change_socket
       @socket = tsl_connector.connect
       start
       regenerate_parser
       wait
-    end
-
-    log :change_socket do
-      "Changing socket to TSL socket"
     end
 
     def wait
@@ -169,10 +157,6 @@ module Xrc
 
     def regenerate_parser
       @parser = generate_parser
-    end
-
-    log :regenerate_parser do
-      "Regenerating parser"
     end
 
     def jid
@@ -209,10 +193,6 @@ module Xrc
 
     def start
       post(Elements::Stream.new(domain))
-    end
-
-    log :start do
-      "Starting stream"
     end
 
     def post(element)
