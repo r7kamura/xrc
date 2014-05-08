@@ -208,7 +208,7 @@ module Xrc
     end
 
     def start
-      post(start_message)
+      post(Elements::Stream.new(domain))
     end
 
     log :start do
@@ -230,18 +230,6 @@ module Xrc
         reply_callbacks[id] = block
       end
       post(element)
-    end
-
-    # This is a special element that has neither any children nor /> section.
-    def start_message
-      %W[
-        <stream:stream
-        xmlns:stream="http://etherx.jabber.org/streams"
-        xmlns="jabber:client"
-        to="#{domain}"
-        xml:lang="en"
-        version="1.0">
-      ].join(" ")
     end
 
     def bind
