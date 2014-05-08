@@ -37,9 +37,17 @@ module Xrc
     end
 
     def cdata(text)
+      if current
+        cdata = REXML::CData.new(text)
+        current.add(cdata)
+      end
     end
 
     def characters(text)
+      if current
+        text = REXML::Text.new(text, current.whitespace, nil, true)
+        current.add(text)
+      end
     end
 
     def end_document
