@@ -45,6 +45,18 @@ module Xrc
 
     private
 
+    def on_bound(element)
+      set_jid(element.elements["/bind/jid/text()"])
+    end
+
+    def set_jid(jid)
+      @jid = Jid.new(jid)
+    end
+
+    log :set_jid do |jid|
+      "Updated JID with #{jid}"
+    end
+
     def on_replied(element)
       id = element.attribute("id").value
       callback = reply_callbacks.delete(id)
@@ -239,9 +251,7 @@ module Xrc
       iq = REXML::Element.new("iq")
       iq.add_attributes("type" => "set")
       iq.add(bind)
-      post_with_id(iq) do |element|
-        # TODO
-      end
+      post_with_id(iq, &method(:on_bound))
     end
 
     def reply_callbacks
