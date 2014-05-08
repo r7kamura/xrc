@@ -21,29 +21,16 @@ module Xrc
       wait
     end
 
-    # Dirty
     def receive(element)
       case
       when element.prefix == "stream" && element.name == "features"
-        element.each do |feature|
-          case
-          when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
-            start_tls
-          when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
-            feature.each_element("mechanism") do |mechanism|
-              mechanisms << mechanism.text
-            end
-            on_mechanisms_received
-          else
-            features[feature.name] = feature.namespace
-          end
-        end
+        on_features_received(element)
       when element.name == "proceed" && element.namespace == TLS_NAMESPACE
-        change_socket
+        on_tls_proceeded(element)
       when element.name == "success" && element.namespace == SASL_NAMESPACE
-        on_authentication_succeeded
+        on_authentication_succeeded(element)
       when element.name == "failure" && element.namespace == SASL_NAMESPACE
-        on_authentication_failed
+        on_authentication_failed(element)
       end
     end
 
@@ -53,12 +40,32 @@ module Xrc
 
     private
 
-    def on_authentication_succeeded
+    def on_features_received(element)
+      element.each do |feature|
+        case
+        when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
+          start_tls
+        when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
+          feature.each_element("mechanism") do |mechanism|
+            mechanisms << mechanism.text
+          end
+          on_mechanisms_received(feature)
+        else
+          features[feature.name] = feature.namespace
+        end
+      end
+    end
+
+    def on_authentication_succeeded(element)
       start
     end
 
-    def on_authentication_failed
+    def on_authentication_failed(element)
       raise NotImplementedError
+    end
+
+    def on_tls_proceeded(element)
+      change_socket
     end
 
     def authenticate
@@ -78,7 +85,7 @@ module Xrc
       "#{jid}\x00#{jid.node}\x00#{password}"
     end
 
-    def on_mechanisms_received
+    def on_mechanisms_received(element)
       authenticate if has_password?
     end
 
