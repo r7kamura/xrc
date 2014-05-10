@@ -47,14 +47,22 @@ module Xrc
 
     private
 
-    def on_bound(element)
-      set_jid(element.elements["/bind/jid/text()"])
-      establish_session
-      require_roster
+    def jid
+      @jid ||= Jid.new(options[:jid])
     end
 
-    def set_jid(jid)
-      @jid = Jid.new(jid)
+    def password
+      options[:password]
+    end
+
+    def port
+      options[:port] || DEFAULT_PORT
+    end
+
+    def on_bound(element)
+      @jid = Jid.new(element.elements["/bind/jid/text()"])
+      establish_session
+      require_roster
     end
 
     def on_replied(element)
@@ -90,6 +98,24 @@ module Xrc
       change_socket
     end
 
+    def on_mechanisms_received(element)
+      element.each_element("mechanism") do |mechanism|
+        mechanisms << mechanism.text
+      end
+      authenticate if password
+    end
+
+    def on_roster_received(element)
+      self.users = element.elements.collect("query/item") do |item|
+        OpenStruct.new(
+          jid: item.attribute("jid").value,
+          mention_name: item.attribute("mention_name").value,
+          name: item.attribute("name").value,
+        )
+      end
+      attend
+    end
+
     def authenticate
       case
       when mechanisms.include?("PLAIN")
@@ -98,17 +124,6 @@ module Xrc
       else
         raise NotImplementedError
       end
-    end
-
-    def on_mechanisms_received(element)
-      element.each_element("mechanism") do |mechanism|
-        mechanisms << mechanism.text
-      end
-      authenticate if password
-    end
-
-    def password
-      options[:password]
     end
 
     def connect
@@ -144,14 +159,6 @@ module Xrc
 
     def regenerate_parser
       @parser = generate_parser
-    end
-
-    def jid
-      @jid ||= Jid.new(options[:jid])
-    end
-
-    def port
-      options[:port] || DEFAULT_PORT
     end
 
     def socket
@@ -222,17 +229,6 @@ module Xrc
 
     def require_roster
       post_with_id(Elements::Roster.new, &method(:on_roster_received))
-    end
-
-    def on_roster_received(element)
-      self.users = element.elements.collect("query/item") do |item|
-        OpenStruct.new(
-          jid: item.attribute("jid").value,
-          mention_name: item.attribute("mention_name").value,
-          name: item.attribute("name").value,
-        )
-      end
-      attend
     end
 
     def users_indexed_by_jid
