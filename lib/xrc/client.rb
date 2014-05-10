@@ -16,7 +16,7 @@ module Xrc
 
     attr_accessor :users
 
-    attr_reader :options
+    attr_reader :connection, :options
 
     def initialize(options = {})
       @options = options
@@ -69,6 +69,10 @@ module Xrc
       Jid.new("#{options[:room_jid]}") if options[:room_jid]
     end
 
+    def connection
+      @connection ||= Connection.new(domain: domain, port: port)
+    end
+
     def on_bound(element)
       @jid = Jid.new(element.elements["/bind/jid/text()"].value)
       establish_session
@@ -105,7 +109,7 @@ module Xrc
     end
 
     def on_tls_proceeded(element)
-      change_socket
+      connection.encrypt
       restart
     end
 
@@ -134,15 +138,11 @@ module Xrc
     end
 
     def connect
-      socket
+      connection.connect
     end
 
     log :connect do
       "Connecting to #{domain}:#{port}"
-    end
-
-    def change_socket
-      @socket = TslConnector.new(socket: socket).connect
     end
 
     def restart
@@ -168,7 +168,7 @@ module Xrc
     end
 
     def socket
-      @socket ||= connector.connect
+      connection.socket
     end
 
     def features
@@ -187,10 +187,6 @@ module Xrc
       reply_callbacks.has_key?(id)
     end
 
-    def connector
-      Connector.new(domain: domain, port: port)
-    end
-
     def domain
       jid.domain
     end
@@ -201,15 +197,7 @@ module Xrc
         element.add_attributes("id" => id)
         reply_callbacks[id] = block
       end
-      write(element)
-    end
-
-    def write(element)
-      socket << element.to_s
-    end
-
-    log :write do |element|
-      "Posting:\n" + element.to_s.indent(2)
+      connection.write(element)
     end
 
     # See RFC1750 for Randomness Recommendations for Security
