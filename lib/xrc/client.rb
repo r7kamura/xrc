@@ -247,10 +247,6 @@ module Xrc
       post(Elements::Roster.new, &method(:on_roster_received))
     end
 
-    def users_indexed_by_jid
-      @users_indexed_by_jid ||= users.index_by(&:jid)
-    end
-
     def attend
       post(Elements::Presence.new)
     end
