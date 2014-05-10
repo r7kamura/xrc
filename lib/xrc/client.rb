@@ -124,9 +124,7 @@ module Xrc
     end
 
     def start_tls
-      element = REXML::Element.new("starttls")
-      element.add_namespace("urn:ietf:params:xml:ns:xmpp-tls")
-      post(element)
+      post(Elements::Starttls.new)
     end
 
     def change_socket
