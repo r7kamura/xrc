@@ -93,15 +93,11 @@ module Xrc
     def authenticate
       case
       when mechanisms.include?("PLAIN")
-        auth = Elements::Auth.new(credentials: plain_credentials)
+        auth = Elements::Auth.new(jid: jid, password: password)
         post(auth)
       else
         raise NotImplementedError
       end
-    end
-
-    def plain_credentials
-      "#{jid.strip}\x00#{jid.node}\x00#{password}"
     end
 
     def on_mechanisms_received(element)
