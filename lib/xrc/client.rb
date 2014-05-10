@@ -104,6 +104,7 @@ module Xrc
 
     def on_tls_proceeded(element)
       change_socket
+      restart
     end
 
     def on_mechanisms_received(element)
@@ -153,7 +154,10 @@ module Xrc
     end
 
     def change_socket
-      @socket = tsl_connector.connect
+      @socket = TslConnector.new(socket: socket).connect
+    end
+
+    def restart
       start
       regenerate_parser
       wait
@@ -189,10 +193,6 @@ module Xrc
 
     def connector
       Connector.new(domain: domain, port: port)
-    end
-
-    def tsl_connector
-      TslConnector.new(socket: socket)
     end
 
     def domain
