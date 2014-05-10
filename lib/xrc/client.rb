@@ -200,7 +200,7 @@ module Xrc
     end
 
     def start
-      post(Elements::Stream.new(domain))
+      post(Elements::Stream.new(domain: domain))
     end
 
     def post(element, &block)

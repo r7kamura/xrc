@@ -1,10 +1,10 @@
 module Xrc
   module Elements
     class Stream
-      attr_reader :domain
+      attr_reader :options
 
-      def initialize(domain)
-        @domain = domain
+      def initialize(options)
+        @options = options
       end
 
       def to_s
@@ -12,7 +12,7 @@ module Xrc
           <stream:stream
           xmlns:stream="http://etherx.jabber.org/streams"
           xmlns="jabber:client"
-          to="#{domain}"
+          to="#{options[:domain]}"
           xml:lang="en"
           version="1.0">
         ].join(" ")
