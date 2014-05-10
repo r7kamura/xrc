@@ -104,11 +104,7 @@ module Xrc
       element.each_element("mechanism") do |mechanism|
         mechanisms << mechanism.text
       end
-      authenticate if has_password?
-    end
-
-    def has_password?
-      !!password
+      authenticate if password
     end
 
     def password
