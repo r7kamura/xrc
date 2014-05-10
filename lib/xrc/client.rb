@@ -101,7 +101,7 @@ module Xrc
     end
 
     def plain_credentials
-      "#{jid}\x00#{jid.node}\x00#{password}"
+      "#{jid.strip}\x00#{jid.node}\x00#{password}"
     end
 
     def on_mechanisms_received(element)

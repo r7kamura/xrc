@@ -20,6 +20,16 @@ module Xrc
       sections[2]
     end
 
+    def strip
+      "#{node}@#{domain}"
+    end
+
+    def to_s
+      str = strip
+      str << "/#{resource}" if resource
+      str
+    end
+
     private
 
     def sections
