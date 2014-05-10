@@ -122,7 +122,12 @@ module Xrc
         )
       end
       attend
+      on_connection_established
+    end
+
+    def on_connection_established
       join if room_jid
+      start_ping_thread
     end
 
     def authenticate
@@ -250,6 +255,12 @@ module Xrc
 
     def join
       post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
+    end
+
+    def start_ping_thread
+      Thread.new do
+        post(Elements::Ping.new(from: jid.to_s, to: jid.domain))
+      end
     end
   end
 end
