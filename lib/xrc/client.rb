@@ -203,25 +203,25 @@ module Xrc
       post(Elements::Stream.new(domain))
     end
 
-    def post(element)
+    def post(element, &block)
+      if block
+        id = generate_id
+        element.add_attributes("id" => id)
+        reply_callbacks[id] = block
+      end
+      write(element)
+    end
+
+    def write(element)
       socket << element.to_s
     end
 
-    log :post do |element|
+    log :write do |element|
       "Posting:\n" + element.to_s.indent(2)
     end
 
-    def post_with_id(element, &block)
-      id = generate_id
-      element.add_attributes("id" => id)
-      if block
-        reply_callbacks[id] = block
-      end
-      post(element)
-    end
-
     def bind
-      post_with_id(Elements::Bind.new(resource: jid.resource), &method(:on_bound))
+      post(Elements::Bind.new(resource: jid.resource), &method(:on_bound))
     end
 
     def reply_callbacks
@@ -238,11 +238,11 @@ module Xrc
     end
 
     def establish_session
-      post_with_id(Elements::Session.new)
+      post(Elements::Session.new)
     end
 
     def require_roster
-      post_with_id(Elements::Roster.new, &method(:on_roster_received))
+      post(Elements::Roster.new, &method(:on_roster_received))
     end
 
     def users_indexed_by_jid
