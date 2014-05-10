@@ -12,6 +12,8 @@ module Xrc
 
     TLS_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-tls"
 
+    PING_INTERVAL = 60
+
     attr_accessor :users
 
     attr_reader :options
@@ -257,9 +259,14 @@ module Xrc
       post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
     end
 
+    def ping
+      post(Elements::Ping.new(from: jid.to_s, to: jid.domain))
+    end
+
     def start_ping_thread
       Thread.new do
-        post(Elements::Ping.new(from: jid.to_s, to: jid.domain))
+        ping
+        sleep(PING_INTERVAL)
       end
     end
   end
