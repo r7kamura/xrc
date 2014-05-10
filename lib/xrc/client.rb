@@ -133,26 +133,12 @@ module Xrc
       start_ping_thread
     end
 
-    def authenticate
-      case
-      when mechanisms.include?("PLAIN")
-        auth = Elements::Auth.new(jid: jid, password: password)
-        post(auth)
-      else
-        raise NotImplementedError
-      end
-    end
-
     def connect
       socket
     end
 
     log :connect do
       "Connecting to #{domain}:#{port}"
-    end
-
-    def start_tls
-      post(Elements::Starttls.new)
     end
 
     def change_socket
@@ -193,16 +179,20 @@ module Xrc
       @mechanisms ||= []
     end
 
+    def reply_callbacks
+      @reply_callbacks ||= {}
+    end
+
+    def has_reply_callbacks_to?(id)
+      reply_callbacks.has_key?(id)
+    end
+
     def connector
       Connector.new(domain: domain, port: port)
     end
 
     def domain
       jid.domain
-    end
-
-    def start
-      post(Elements::Stream.new(domain: domain))
     end
 
     def post(element, &block)
@@ -222,21 +212,13 @@ module Xrc
       "Posting:\n" + element.to_s.indent(2)
     end
 
-    def bind
-      post(Elements::Bind.new(resource: jid.resource), &method(:on_bound))
-    end
-
-    def reply_callbacks
-      @reply_callbacks ||= {}
-    end
-
-    def has_reply_callbacks_to?(id)
-      reply_callbacks.has_key?(id)
-    end
-
     # See RFC1750 for Randomness Recommendations for Security
     def generate_id
       SecureRandom.hex(8)
+    end
+
+    def bind
+      post(Elements::Bind.new(resource: jid.resource), &method(:on_bound))
     end
 
     def establish_session
@@ -257,6 +239,24 @@ module Xrc
 
     def ping
       post(Elements::Ping.new(from: jid.to_s, to: jid.domain))
+    end
+
+    def start_tls
+      post(Elements::Starttls.new)
+    end
+
+    def start
+      post(Elements::Stream.new(domain: domain))
+    end
+
+    def authenticate
+      case
+      when mechanisms.include?("PLAIN")
+        auth = Elements::Auth.new(jid: jid, password: password)
+        post(auth)
+      else
+        raise NotImplementedError
+      end
     end
 
     def start_ping_thread
