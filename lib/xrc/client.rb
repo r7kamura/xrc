@@ -24,8 +24,6 @@ module Xrc
 
     def run
       connect
-      start
-      wait
     end
 
     def receive(element)
@@ -70,7 +68,9 @@ module Xrc
     end
 
     def connection
-      @connection ||= Connection.new(domain: domain, port: port)
+      @connection ||= Connection.new(domain: domain, port: port) do |element|
+        receive(element)
+      end
     end
 
     def on_bound(element)
@@ -101,7 +101,7 @@ module Xrc
     end
 
     def on_authentication_succeeded(element)
-      start
+      connection.open
     end
 
     def on_authentication_failed(element)
@@ -110,7 +110,6 @@ module Xrc
 
     def on_tls_proceeded(element)
       connection.encrypt
-      restart
     end
 
     def on_mechanisms_received(element)
@@ -143,28 +142,6 @@ module Xrc
 
     log :connect do
       "Connecting to #{domain}:#{port}"
-    end
-
-    def restart
-      start
-      regenerate_parser
-      wait
-    end
-
-    def wait
-      parser.parse
-    end
-
-    def parser
-      @parser ||= generate_parser
-    end
-
-    def generate_parser
-      Parser.new(socket, client: self)
-    end
-
-    def regenerate_parser
-      @parser = generate_parser
     end
 
     def socket

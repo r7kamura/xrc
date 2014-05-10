@@ -10,19 +10,15 @@ module Xrc
 
     attr_accessor :current
 
-    attr_reader :options
+    attr_reader :block, :options
 
-    def initialize(socket, options = {})
-      super(socket)
-      @options = options
+    def initialize(options, &block)
+      super(options[:socket])
+      @block = block
       bind
     end
 
     private
-
-    def client
-      options[:client]
-    end
 
     def bind
       EVENTS.each do |event|
@@ -58,7 +54,7 @@ module Xrc
       element = REXML::Element.new(qname)
       element.add_attributes(attributes)
       if qname == "stream:stream"
-        client.receive(element)
+        consume(element)
       else
         push(element)
       end
@@ -78,8 +74,8 @@ module Xrc
       end
     end
 
-    def consume
-      client.receive(current)
+    def consume(element = current)
+      block.call(element)
     end
 
     def has_current?
