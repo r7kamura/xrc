@@ -62,12 +62,6 @@ describe Xrc::Client do
     EOS
   end
 
-  describe "#connect" do
-    it "connects to XMPP server via TCP socket" do
-      instance.connect.should be_a TCPSocket
-    end
-  end
-
   describe "#run" do
     before do
       pending
