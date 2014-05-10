@@ -93,11 +93,8 @@ module Xrc
     def authenticate
       case
       when mechanisms.include?("PLAIN")
-        element = REXML::Element.new("auth")
-        element.add_namespace(SASL_NAMESPACE)
-        element.attributes["mechanism"] = "PLAIN"
-        element.text = Base64.strict_encode64(plain_credentials)
-        post(element)
+        auth = Elements::Auth.new(credentials: plain_credentials)
+        post(auth)
       else
         raise NotImplementedError
       end
