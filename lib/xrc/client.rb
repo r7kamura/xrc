@@ -249,7 +249,7 @@ module Xrc
     end
 
     def join
-      post(Elements::Presence.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
+      post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
     end
   end
 end

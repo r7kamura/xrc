@@ -13,7 +13,7 @@ module Xrc
     private
 
     def ssl_socket
-      ssl_socket = OpenSSL::SSL::SSLSocket.new(socket, context)
+      ssl_socket = Socket.new(socket, context)
       ssl_socket.sync_close = true
       ssl_socket
     end
