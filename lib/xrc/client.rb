@@ -55,12 +55,20 @@ module Xrc
       options[:password]
     end
 
+    def nickname
+      options[:nickname]
+    end
+
     def port
       options[:port] || DEFAULT_PORT
     end
 
+    def room_jid
+      Jid.new("#{options[:room_jid]}") if options[:room_jid]
+    end
+
     def on_bound(element)
-      @jid = Jid.new(element.elements["/bind/jid/text()"])
+      @jid = Jid.new(element.elements["/bind/jid/text()"].value)
       establish_session
       require_roster
     end
@@ -114,6 +122,7 @@ module Xrc
         )
       end
       attend
+      join if room_jid
     end
 
     def authenticate
@@ -237,6 +246,10 @@ module Xrc
 
     def attend
       post(Elements::Presence.new)
+    end
+
+    def join
+      post(Elements::Presence.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
     end
   end
 end
