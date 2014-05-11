@@ -30,6 +30,10 @@ module Xrc
       str
     end
 
+    def ==(jid)
+      to_s == jid.to_s || strip == jid.strip
+    end
+
     private
 
     def sections

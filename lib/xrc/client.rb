@@ -4,7 +4,7 @@ module Xrc
 
     PING_INTERVAL = 30
 
-    # @return [Array] Users information represented in an Array of OpenStructs
+    # @return [Xrc::Roster] Users information existing in the server
     attr_reader :roster
 
     # @option options [String] :port Port number to connect server (default: 5222)
@@ -212,13 +212,7 @@ module Xrc
     end
 
     def on_roster_received(element)
-      @roster = element.elements.collect("query/item") do |item|
-        User.new(
-          jid: item.attribute("jid").value,
-          mention_name: item.attribute("mention_name").value,
-          name: item.attribute("name").value,
-        )
-      end
+      @roster = Roster.new(element)
       attend
       on_connection_established
     end
