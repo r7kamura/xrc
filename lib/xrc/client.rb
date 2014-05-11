@@ -30,12 +30,12 @@ module Xrc
     # @yieldparam element [Xrc::Message] Represents a given message
     # @return [Proc] Returns given block
     # @example
-    #   client.on_message do |message|
+    #   client.on_room_message do |message|
     #     puts "#{message.from}: #{message.body}"
     #   end
     #
-    def on_message(&block)
-      @on_message_block = block
+    def on_room_message(&block)
+      @on_room_message_block = block
     end
 
     # Registers a callback called when client received a new message with subject
@@ -70,8 +70,8 @@ module Xrc
       @on_event_block ||= ->(element) {}
     end
 
-    def on_message_block
-      @on_message_block ||= ->(element) {}
+    def on_room_message_block
+      @on_room_message_block ||= ->(element) {}
     end
 
     def on_subject_block
@@ -84,7 +84,7 @@ module Xrc
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
         on_replied(element)
       when element.name == "message"
-        on_message_received(element)
+        on_room_message_received(element)
       when element.prefix == "stream" && element.name == "features"
         on_features_received(element)
       when element.name == "proceed" && element.namespace == Namespaces::TLS
@@ -122,11 +122,11 @@ module Xrc
       end
     end
 
-    def on_message_received(element)
+    def on_room_message_received(element)
       message = Message.new(element)
       case
       when message.body
-        instance_exec(message, &on_message_block)
+        instance_exec(message, &on_room_message_block)
       when message.subject
         instance_exec(message, &on_subject_block)
       end

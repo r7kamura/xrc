@@ -16,7 +16,7 @@ client = Xrc::Client.new(
 )
 
 # Registers a callback called when client received a message with body.
-client.on_message do |message|
+client.on_room_message do |message|
   puts "Received message: #{message.body}"
 end
 
