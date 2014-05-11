@@ -12,8 +12,12 @@ module Xrc
       @options = options
     end
 
-    def run
-      connect
+    def connect
+      connection.connect
+    end
+
+    log :connect do
+      "Connecting to #{domain}:#{port}"
     end
 
     private
@@ -131,14 +135,6 @@ module Xrc
     def on_connection_established
       join if room_jid
       start_ping_thread
-    end
-
-    def connect
-      connection.connect
-    end
-
-    log :connect do
-      "Connecting to #{domain}:#{port}"
     end
 
     def features
