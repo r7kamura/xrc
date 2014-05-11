@@ -4,22 +4,33 @@ module Xrc
 
     PING_INTERVAL = 60
 
-    attr_accessor :users
+    # @return [Array] Users information represented in an Array of OpenStructs
+    attr_reader :roster
 
-    attr_reader :connection, :options
-
+    # @option options [String] :port Port number to connect server (default: 5222)
+    # @option options [String] :jid Jabber ID of your account (required)
+    # @option options [String] :nickname Pass nickname for the Room (optional)
+    # @option options [String] :password Password to connect server (optional)
+    # @option options [String] :room_jid Room Jabber ID to join in after authentication (optional)
     def initialize(options = {})
       @options = options
     end
 
+    # Connects to the JID's server and waits for message
     def connect
       connection.connect
     end
 
+    # Registers a callback called when client received a new message from server
+    # @yield Executes a given callback in the Client's context
+    # @yieldparam element [REXML::Element] Represents a new message
     def on_message(&block)
       @on_message_block = block
     end
 
+    # Registers a callback called when client received a new XML element from server
+    # @yield Executes a given callback in the Client's context
+    # @yieldparam element [REXML::Element] Represents a new XML element
     def on_event(&block)
       @on_event_block = block
     end
@@ -53,23 +64,23 @@ module Xrc
     end
 
     def jid
-      @jid ||= Jid.new(options[:jid])
+      @jid ||= Jid.new(@options[:jid])
     end
 
     def password
-      options[:password]
+      @options[:password]
     end
 
     def nickname
-      options[:nickname]
+      @options[:nickname]
     end
 
     def port
-      options[:port] || DEFAULT_PORT
+      @options[:port] || DEFAULT_PORT
     end
 
     def room_jid
-      Jid.new("#{options[:room_jid]}") if options[:room_jid]
+      Jid.new("#{@options[:room_jid]}") if @options[:room_jid]
     end
 
     def connection
@@ -129,7 +140,7 @@ module Xrc
     end
 
     def on_roster_received(element)
-      self.users = element.elements.collect("query/item") do |item|
+      @roster = element.elements.collect("query/item") do |item|
         OpenStruct.new(
           jid: item.attribute("jid").value,
           mention_name: item.attribute("mention_name").value,
