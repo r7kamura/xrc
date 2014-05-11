@@ -12,6 +12,8 @@ module Xrc
     # @option options [String] :nickname Pass nickname for the Room (optional)
     # @option options [String] :password Password to connect server (optional)
     # @option options [String] :room_jid Room Jabber ID to join in after authentication (optional)
+    # @example
+    #   client = Xrc::Client.new(jid: "alice@example.com")
     def initialize(options = {})
       @options = options
     end
@@ -24,6 +26,11 @@ module Xrc
     # Registers a callback called when client received a new message from server
     # @yield Executes a given callback in the Client's context
     # @yieldparam element [REXML::Element] Represents a new message
+    # @example
+    #   client.on_message do |element|
+    #     puts "Received #{element}"
+    #   end
+    #
     def on_message(&block)
       @on_message_block = block
     end
@@ -31,6 +38,11 @@ module Xrc
     # Registers a callback called when client received a new XML element from server
     # @yield Executes a given callback in the Client's context
     # @yieldparam element [REXML::Element] Represents a new XML element
+    # @example
+    #   client.on_event do |element|
+    #     puts "Received #{element}"
+    #   end
+    #
     def on_event(&block)
       @on_event_block = block
     end
