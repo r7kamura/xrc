@@ -213,7 +213,7 @@ module Xrc
 
     def on_roster_received(element)
       @roster = element.elements.collect("query/item") do |item|
-        OpenStruct.new(
+        User.new(
           jid: item.attribute("jid").value,
           mention_name: item.attribute("mention_name").value,
           name: item.attribute("name").value,
