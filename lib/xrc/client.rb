@@ -211,14 +211,9 @@ module Xrc
       post(Elements::Stream.new(domain: domain))
     end
 
+    # Only supports PLAIN authentication
     def authenticate
-      case
-      when mechanisms.include?("PLAIN")
-        auth = Elements::Auth.new(jid: jid, password: password)
-        post(auth)
-      else
-        raise NotImplementedError
-      end
+      post(Elements::Auth.new(jid: jid, password: password))
     end
 
     def start_ping_thread
