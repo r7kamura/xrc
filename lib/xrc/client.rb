@@ -92,6 +92,13 @@ module Xrc
       )
     end
 
+    # @return [String] Mention name of this account
+    # @example
+    #   client.mention_name #=> "alice"
+    def mention_name
+      users[jid].try(:mention_name)
+    end
+
     private
 
     def on_event_block

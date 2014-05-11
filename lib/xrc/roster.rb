@@ -10,7 +10,6 @@ module Xrc
     # @return [Xrc::User]
     # @return [nil]
     def [](jid)
-      jid = Jid.new(jid)
       users.find {|user| user.jid == jid }
     end
 

@@ -31,6 +31,7 @@ module Xrc
     end
 
     def ==(jid)
+      jid = Jid.new(jid) unless jid.is_a?(Jid)
       to_s == jid.to_s || strip == jid.strip
     end
 
