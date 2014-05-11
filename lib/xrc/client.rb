@@ -16,10 +16,6 @@ module Xrc
       connection.connect
     end
 
-    log :connect do
-      "Connecting to #{domain}:#{port}"
-    end
-
     def on_message(&block)
       @on_message_block = block
     end

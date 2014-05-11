@@ -26,10 +26,6 @@ module Xrc
       socket << object.to_s
     end
 
-    log :write do |element|
-      "Posting:\n" + element.to_s.indent(2)
-    end
-
     private
 
     def start

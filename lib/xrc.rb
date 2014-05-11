@@ -11,7 +11,6 @@ require "securerandom"
 require "socket"
 
 require "xrc/method_loggable"
-require "xrc/core_ext/module"
 require "xrc/client"
 require "xrc/connection"
 require "xrc/connection/connector"
