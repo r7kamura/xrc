@@ -73,7 +73,7 @@ module Xrc
     end
 
     def connection
-      @connection ||= Connection.new(domain: domain, port: port) do |element|
+      @connection ||= Connection.new(domain: jid.domain, port: port) do |element|
         on_received(element)
       end
     end
@@ -161,10 +161,6 @@ module Xrc
       reply_callbacks.has_key?(id)
     end
 
-    def domain
-      jid.domain
-    end
-
     def post(element, &block)
       if block
         id = generate_id
@@ -208,7 +204,7 @@ module Xrc
     end
 
     def start
-      post(Elements::Stream.new(domain: domain))
+      post(Elements::Stream.new(domain: jid.domain))
     end
 
     # Only supports PLAIN authentication
