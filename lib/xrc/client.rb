@@ -111,7 +111,7 @@ module Xrc
     end
 
     def on_received(element)
-      instance_exec(element, &on_event_block)
+      on_event_block.call(element)
       case
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
         on_replied(element)
@@ -157,11 +157,11 @@ module Xrc
     def on_room_message_received(element)
       case message = MessageBuilder.build(element)
       when Messages::RoomMessage
-        instance_exec(message, &on_room_message_block)
+        on_room_message_block.call(message)
       when Messages::PrivateMessage
-        instance_exec(message, &on_private_message_block)
+        on_private_message_block.call(message)
       when Messages::Subject
-        instance_exec(message, &on_subject_block)
+        on_subject_block.call(message)
       end
     end
 
