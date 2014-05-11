@@ -106,7 +106,11 @@ module Xrc
     end
 
     def on_message_received(element)
-      instance_exec(element, &on_message_block)
+      message = Message.new(element)
+      case
+      when message.body
+        instance_exec(message, &on_message_block)
+      end
     end
 
     def on_bound(element)
