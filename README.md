@@ -15,21 +15,18 @@ client = Xrc::Client.new(
   room_jid: "bar@example.com", # optional
 )
 
-# Registers a callback called when client received a new private message.
+# Responds to "ping" and returns "pong".
 client.on_private_message do |message|
   if message.body == "ping"
-    reply(body: "pong", to: message)
+    client.reply(body: "pong", to: message)
   end
 end
 
-# Registers a callback called when client received a new room message.
+# Responds to "Thank you" and returns "You're welcome".
 client.on_room_message do |message|
-  puts "Received room message: #{message.body}"
-end
-
-# Registers a callback called when client received a new subject message.
-client.on_subject do |message|
-  puts "Received subject: #{message.subject}"
+  if message.body == "Thank you"
+    client.reply(body: "You're welcome", to: message)
+  end
 end
 
 # Connects to a XMPP server and waits for new messages.
