@@ -6,7 +6,7 @@ module Xrc
 
     attr_accessor :users
 
-    attr_reader :connection, :on_message_block, :options
+    attr_reader :connection, :options
 
     def initialize(options = {})
       @options = options
@@ -24,9 +24,22 @@ module Xrc
       @on_message_block = block
     end
 
+    def on_event(&block)
+      @on_event_block = block
+    end
+
     private
 
+    def on_message_block
+      @on_message_block ||= ->(element) {}
+    end
+
+    def on_event_block
+      @on_event_block ||= ->(element) {}
+    end
+
     def on_received(element)
+      instance_exec(element, &on_event_block)
       case
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
         on_replied(element)
@@ -41,10 +54,6 @@ module Xrc
       when element.name == "failure" && element.namespace == Namespaces::SASL
         on_authentication_failed(element)
       end
-    end
-
-    log :on_received do |element|
-      "Received:\n" + "#{REXML::Formatters::Pretty.new(2).write(element, '')}".indent(2)
     end
 
     def jid
