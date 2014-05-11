@@ -9,7 +9,7 @@ module Xrc
     # @param [String] jid JID
     # @return [Xrc::User]
     # @return [nil]
-    def find(jid)
+    def [](jid)
       jid = Jid.new(jid)
       users.find {|user| user.jid == jid }
     end

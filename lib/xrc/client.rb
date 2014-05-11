@@ -5,7 +5,7 @@ module Xrc
     PING_INTERVAL = 30
 
     # @return [Xrc::Roster] Users information existing in the server
-    attr_reader :roster
+    attr_reader :users
 
     # @option options [String] :port Port number to connect server (default: 5222)
     # @option options [String] :jid Jabber ID of your account (required)
@@ -212,7 +212,7 @@ module Xrc
     end
 
     def on_roster_received(element)
-      @roster = Roster.new(element)
+      @users = Roster.new(element)
       attend
       on_connection_established
     end
