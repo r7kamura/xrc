@@ -30,11 +30,6 @@ client.on_subject do |message|
   puts "Received subject: #{message.subject}"
 end
 
-# Registers a callback called when client received a new XML element from server.
-client.on_event do |element|
-  puts "Received XML element: #{element}"
-end
-
 # Connects to a XMPP server and waits for new messages.
 client.connect
 ```
