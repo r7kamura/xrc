@@ -2,7 +2,7 @@ module Xrc
   class Client
     DEFAULT_PORT = 5222
 
-    PING_INTERVAL = 60
+    PING_INTERVAL = 30
 
     # @return [Array] Users information represented in an Array of OpenStructs
     attr_reader :roster
