@@ -56,7 +56,7 @@ describe Xrc::Client do
         version='1.0'
         xmlns='jabber:client'>
         <stream:features>
-          <starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>
+          <starttls xmlns='#{Namespaces::TLS}'/>
           <required/>
         </stream:features>
     EOS

@@ -3,7 +3,7 @@ module Xrc
     class Starttls < REXML::Element
       def initialize
         super("starttls")
-        add_namespace(Client::TLS_NAMESPACE)
+        add_namespace(Namespaces::TLS)
       end
     end
   end

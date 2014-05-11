@@ -4,7 +4,7 @@ module Xrc
       def initialize
         super("iq")
         query = REXML::Element.new("query")
-        query.add_namespace(Client::ROSTER_NAMESPACE)
+        query.add_namespace(Namespaces::ROSTER)
         add_attributes("type" => "get")
         add(query)
       end

@@ -4,7 +4,7 @@ module Xrc
       def initialize(options = {})
         super("iq")
         bind = REXML::Element.new("bind")
-        bind.add_namespace(Client::BIND_NAMESPACE)
+        bind.add_namespace(Namespaces::BIND)
         if options[:resource]
           resource = REXML::Element.new("resource")
           resource.text = options[:resource]

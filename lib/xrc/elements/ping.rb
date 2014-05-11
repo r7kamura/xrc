@@ -13,7 +13,7 @@ module Xrc
 
       def ping
         element = REXML::Element.new("ping")
-        element.add_namespace("urn:xmpp:ping")
+        element.add_namespace(Namespaces::PING)
         element
       end
     end

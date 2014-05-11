@@ -26,7 +26,7 @@ module Xrc
       end
 
       def add_sasl_namespace
-        add_namespace(Client::SASL_NAMESPACE)
+        add_namespace(Namespaces::SASL)
       end
 
       def add_plain_mechanism_attribute

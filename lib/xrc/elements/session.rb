@@ -4,7 +4,7 @@ module Xrc
       def initialize
         super("iq")
         session = REXML::Element.new("session")
-        session.add_namespace(Client::SESSION_NAMESPACE)
+        session.add_namespace(Namespaces::SESSION)
         add_attributes("type" => "set")
         add(session)
       end

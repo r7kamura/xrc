@@ -2,16 +2,6 @@ module Xrc
   class Client
     DEFAULT_PORT = 5222
 
-    BIND_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-bind"
-
-    ROSTER_NAMESPACE = "jabber:iq:roster"
-
-    SASL_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-sasl"
-
-    SESSION_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-session"
-
-    TLS_NAMESPACE = "urn:ietf:params:xml:ns:xmpp-tls"
-
     PING_INTERVAL = 60
 
     attr_accessor :users
@@ -32,11 +22,11 @@ module Xrc
         on_replied(element)
       when element.prefix == "stream" && element.name == "features"
         on_features_received(element)
-      when element.name == "proceed" && element.namespace == TLS_NAMESPACE
+      when element.name == "proceed" && element.namespace == Namespaces::TLS
         on_tls_proceeded(element)
-      when element.name == "success" && element.namespace == SASL_NAMESPACE
+      when element.name == "success" && element.namespace == Namespaces::SASL
         on_authentication_succeeded(element)
-      when element.name == "failure" && element.namespace == SASL_NAMESPACE
+      when element.name == "failure" && element.namespace == Namespaces::SASL
         on_authentication_failed(element)
       end
     end
@@ -88,11 +78,11 @@ module Xrc
     def on_features_received(element)
       element.each do |feature|
         case
-        when feature.name == "bind" && feature.namespace == BIND_NAMESPACE
+        when feature.name == "bind" && feature.namespace == Namespaces::BIND
           bind
-        when feature.name == "starttls" && feature.namespace == TLS_NAMESPACE
+        when feature.name == "starttls" && feature.namespace == Namespaces::TLS
           start_tls
-        when feature.name == "mechanisms" && feature.namespace == SASL_NAMESPACE
+        when feature.name == "mechanisms" && feature.namespace == Namespaces::SASL
           on_mechanisms_received(feature)
         else
           features[feature.name] = feature.namespace

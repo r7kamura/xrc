@@ -12,7 +12,7 @@ module Xrc
 
       def x
         element = REXML::Element.new("x")
-        element.add_namespace("http://jabber.org/protocol/muc")
+        element.add_namespace(Namespaces::MUC)
         element
       end
     end
