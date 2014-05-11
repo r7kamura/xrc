@@ -19,13 +19,16 @@ module Xrc
     end
 
     # Connects to the JID's server and waits for message
+    # @return [nil] Returns nothing
     def connect
       connection.connect
+      nil
     end
 
     # Registers a callback called when client received a new message from server
     # @yield Executes a given callback in the Client's context
     # @yieldparam element [REXML::Element] Represents a new message
+    # @return [Proc] Returns given block
     # @example
     #   client.on_message do |element|
     #     puts "Received #{element}"
@@ -38,6 +41,7 @@ module Xrc
     # Registers a callback called when client received a new XML element from server
     # @yield Executes a given callback in the Client's context
     # @yieldparam element [REXML::Element] Represents a new XML element
+    # @return [Proc] Returns given block
     # @example
     #   client.on_event do |element|
     #     puts "Received #{element}"
