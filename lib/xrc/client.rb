@@ -20,6 +20,8 @@ module Xrc
       case
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
         on_replied(element)
+      when element.name == "message"
+        on_message_received(element)
       when element.prefix == "stream" && element.name == "features"
         on_features_received(element)
       when element.name == "proceed" && element.namespace == Namespaces::TLS
@@ -61,6 +63,11 @@ module Xrc
       @connection ||= Connection.new(domain: domain, port: port) do |element|
         on_received(element)
       end
+    end
+
+    # TODO
+    def on_message_received(element)
+      puts element
     end
 
     def on_bound(element)
@@ -132,10 +139,6 @@ module Xrc
 
     log :connect do
       "Connecting to #{domain}:#{port}"
-    end
-
-    def socket
-      connection.socket
     end
 
     def features
