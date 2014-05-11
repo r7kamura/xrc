@@ -282,8 +282,10 @@ module Xrc
 
     def start_ping_thread
       Thread.new do
-        ping
-        sleep(PING_INTERVAL)
+        loop do
+          ping
+          sleep(PING_INTERVAL)
+        end
       end
     end
   end
