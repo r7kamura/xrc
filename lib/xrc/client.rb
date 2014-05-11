@@ -123,11 +123,10 @@ module Xrc
     end
 
     def on_room_message_received(element)
-      message = Message.new(element)
-      case
-      when message.body
+      case message = MessageBuilder.build(element)
+      when Messages::RoomMessage
         instance_exec(message, &on_room_message_block)
-      when message.subject
+      when Messages::Subject
         instance_exec(message, &on_subject_block)
       end
     end
