@@ -16,6 +16,8 @@ module Xrc
       connect
     end
 
+    private
+
     def on_received(element)
       case
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
@@ -36,8 +38,6 @@ module Xrc
     log :on_received do |element|
       "Received:\n" + "#{REXML::Formatters::Pretty.new(2).write(element, '')}".indent(2)
     end
-
-    private
 
     def jid
       @jid ||= Jid.new(options[:jid])
