@@ -25,17 +25,30 @@ module Xrc
       nil
     end
 
-    # Registers a callback called when client received a new message from server
+    # Registers a callback called when client received a new message with body
     # @yield Executes a given callback in the Client's context
-    # @yieldparam element [REXML::Element] Represents a new message
+    # @yieldparam element [Xrc::Message] Represents a given message
     # @return [Proc] Returns given block
     # @example
-    #   client.on_message do |element|
-    #     puts "Received #{element}"
+    #   client.on_message do |message|
+    #     puts "#{message.from}: #{message.body}"
     #   end
     #
     def on_message(&block)
       @on_message_block = block
+    end
+
+    # Registers a callback called when client received a new message with subject
+    # @yield Executes a given callback in the Client's context
+    # @yieldparam element [Xrc::Message] Represents a given message
+    # @return [Proc] Returns given block
+    # @example
+    #   client.on_subject do |element|
+    #     puts "Subject: #{element.subject}"
+    #   end
+    #
+    def on_subject(&block)
+      @on_subject_block = block
     end
 
     # Registers a callback called when client received a new XML element from server
@@ -53,12 +66,16 @@ module Xrc
 
     private
 
+    def on_event_block
+      @on_event_block ||= ->(element) {}
+    end
+
     def on_message_block
       @on_message_block ||= ->(element) {}
     end
 
-    def on_event_block
-      @on_event_block ||= ->(element) {}
+    def on_subject_block
+      @on_subject_block ||= ->(element) {}
     end
 
     def on_received(element)
@@ -110,6 +127,8 @@ module Xrc
       case
       when message.body
         instance_exec(message, &on_message_block)
+      when message.subject
+        instance_exec(message, &on_subject_block)
       end
     end
 

@@ -15,9 +15,14 @@ client = Xrc::Client.new(
   room_jid: "bar@example.com", # optional
 )
 
-# Registers a callback called when client received a new message from server.
-client.on_message do |element|
-  puts "Received message: #{element}"
+# Registers a callback called when client received a message with body.
+client.on_message do |message|
+  puts "Received message: #{message.body}"
+end
+
+# Registers a callback called when client received a message with subject.
+client.on_subject do |message|
+  puts "Received subject: #{message.subject}"
 end
 
 # Registers a callback called when client received a new XML element from server.
