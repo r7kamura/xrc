@@ -6,7 +6,7 @@ module Xrc
       # @example
       #   message.subject #=> "Room1"
       def subject
-        @element.elements["subject/text()"]
+        @element.elements["subject/text()"].to_s
       end
 
       # Returns this message in Hash format

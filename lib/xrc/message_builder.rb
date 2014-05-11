@@ -21,6 +21,8 @@ module Xrc
       case
       when has_room_message?
         Messages::RoomMessage
+      when has_private_message?
+        Messages::PrivateMessage
       when has_subject?
         Messages::Subject
       else
@@ -29,11 +31,19 @@ module Xrc
     end
 
     def has_room_message?
-      has_groupchat? && has_body?
+      has_groupchat_type? && has_body?
     end
 
-    def has_groupchat?
-      @element.attributes["type"].to_s == "groupchat"
+    def has_private_message?
+      has_chat_type? && has_body?
+    end
+
+    def has_chat_type?
+      type == "chat"
+    end
+
+    def has_groupchat_type?
+      type == "groupchat"
     end
 
     def has_body?
@@ -42,6 +52,10 @@ module Xrc
 
     def has_subject?
       !!@element.elements["subject"]
+    end
+
+    def type
+      @element.attributes["type"].to_s
     end
   end
 end

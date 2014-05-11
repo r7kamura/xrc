@@ -15,12 +15,17 @@ client = Xrc::Client.new(
   room_jid: "bar@example.com", # optional
 )
 
-# Registers a callback called when client received a message with body.
-client.on_room_message do |message|
-  puts "Received message: #{message.body}"
+# Registers a callback called when client received a new private message.
+client.on_private_message do |message|
+  puts "Received private message: #{message.body}"
 end
 
-# Registers a callback called when client received a message with subject.
+# Registers a callback called when client received a new room message.
+client.on_room_message do |message|
+  puts "Received room message: #{message.body}"
+end
+
+# Registers a callback called when client received a new subject message.
 client.on_subject do |message|
   puts "Received subject: #{message.subject}"
 end

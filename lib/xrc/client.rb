@@ -25,7 +25,20 @@ module Xrc
       nil
     end
 
-    # Registers a callback called when client received a new message with body
+    # Registers a callback called when client received a new private message (a.k.a. 1vs1 message)
+    # @yield Executes a given callback in the Client's context
+    # @yieldparam element [Xrc::Message] Represents a given message
+    # @return [Proc] Returns given block
+    # @example
+    #   client.on_private_message do |message|
+    #     puts "#{message.from}: #{message.body}"
+    #   end
+    #
+    def on_private_message(&block)
+      @on_private_message_block = block
+    end
+
+    # Registers a callback called when client received a new room message
     # @yield Executes a given callback in the Client's context
     # @yieldparam element [Xrc::Message] Represents a given message
     # @return [Proc] Returns given block
@@ -68,6 +81,10 @@ module Xrc
 
     def on_event_block
       @on_event_block ||= ->(element) {}
+    end
+
+    def on_private_message_block
+      @on_private_message_block ||= ->(element) {}
     end
 
     def on_room_message_block
@@ -126,6 +143,8 @@ module Xrc
       case message = MessageBuilder.build(element)
       when Messages::RoomMessage
         instance_exec(message, &on_room_message_block)
+      when Messages::PrivateMessage
+        instance_exec(message, &on_private_message_block)
       when Messages::Subject
         instance_exec(message, &on_subject_block)
       end

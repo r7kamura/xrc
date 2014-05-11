@@ -1,6 +1,6 @@
 module Xrc
   module Messages
-    class RoomMessage < Message
+    class PrivateMessage < Message
     end
   end
 end
