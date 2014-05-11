@@ -16,7 +16,7 @@ module Xrc
       connect
     end
 
-    def receive(element)
+    def on_received(element)
       case
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
         on_replied(element)
@@ -31,7 +31,7 @@ module Xrc
       end
     end
 
-    log :receive do |element|
+    log :on_received do |element|
       "Received:\n" + "#{REXML::Formatters::Pretty.new(2).write(element, '')}".indent(2)
     end
 
@@ -59,7 +59,7 @@ module Xrc
 
     def connection
       @connection ||= Connection.new(domain: domain, port: port) do |element|
-        receive(element)
+        on_received(element)
       end
     end
 
