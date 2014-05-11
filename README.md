@@ -17,7 +17,9 @@ client = Xrc::Client.new(
 
 # Registers a callback called when client received a new private message.
 client.on_private_message do |message|
-  puts "Received private message: #{message.body}"
+  if message.body == "ping"
+    reply(body: "pong", to: message)
+  end
 end
 
 # Registers a callback called when client received a new room message.

@@ -1,5 +1,6 @@
 module Xrc
   class MessageBuilder
+    # Builds a Message object from a REXML::Element.
     # @param [REXML::Element] element A message element
     # @return [Xrc::Messages::Base] An ancestor of Xrc::Messages::Base instance
     def self.build(element)

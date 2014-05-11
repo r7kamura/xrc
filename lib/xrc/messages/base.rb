@@ -9,7 +9,7 @@ module Xrc
         @element = element
       end
 
-      # Returns a JID of message sender (e.g. alice@example.com)
+      # Returns a JID of message sender
       # @return [String]
       # @example
       #   message.from #=> "alice@example.com"
@@ -17,12 +17,20 @@ module Xrc
         @element.attribute("from").to_s
       end
 
-      # Returns a JID of message address (e.g. bob@example.com)
+      # Returns a JID of message address
       # @return [String]
       # @example
       #   message.to #=> "bob@example.com"
       def to
         @element.attribute("to").to_s
+      end
+
+      # Returns the type of the message
+      # @return [String]
+      # @example
+      #   message.type #=> "groupchat"
+      def type
+        @element.attribute("type").to_s
       end
     end
   end

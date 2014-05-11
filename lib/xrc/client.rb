@@ -77,6 +77,21 @@ module Xrc
       @on_event_block = block
     end
 
+    # Replies to given message
+    # @option options [Xrc::Messages::Base] :to A message object given from server
+    # @option options [String] :body A text to be sent to server
+    # @return [REXML::Element] Returns an element sent to server
+    # @example
+    #   client.reply(body: "Thanks", to: message)
+    def reply(options)
+      say(
+        body: options[:body],
+        from: options[:to].to,
+        to: options[:to].from,
+        type: options[:to].type,
+      )
+    end
+
     private
 
     def on_event_block
@@ -236,6 +251,7 @@ module Xrc
         reply_callbacks[id] = block
       end
       connection.write(element)
+      element
     end
 
     # See RFC1750 for Randomness Recommendations for Security
@@ -278,6 +294,15 @@ module Xrc
     # Only supports PLAIN authentication
     def authenticate
       post(Elements::Auth.new(jid: jid, password: password))
+    end
+
+    def say(options)
+      post Elements::Message.new(
+        body: options[:body],
+        from: options[:from],
+        to: options[:to],
+        type: options[:type],
+      )
     end
 
     def start_ping_thread
