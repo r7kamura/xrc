@@ -6,7 +6,7 @@ module Xrc
 
     attr_accessor :users
 
-    attr_reader :connection, :options
+    attr_reader :connection, :on_message_block, :options
 
     def initialize(options = {})
       @options = options
@@ -18,6 +18,10 @@ module Xrc
 
     log :connect do
       "Connecting to #{domain}:#{port}"
+    end
+
+    def on_message(&block)
+      @on_message_block = block
     end
 
     private
@@ -69,9 +73,8 @@ module Xrc
       end
     end
 
-    # TODO
     def on_message_received(element)
-      puts element
+      instance_exec(element, &on_message_block)
     end
 
     def on_bound(element)
