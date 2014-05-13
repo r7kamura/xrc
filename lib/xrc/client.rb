@@ -92,6 +92,23 @@ module Xrc
       )
     end
 
+    # Send a message
+    # @option options [String] :body Message body
+    # @option options [String] :from Sender's JID
+    # @option options [String] :to Address JID
+    # @option options [String] :type Message type (e.g. chat, groupchat)
+    # @return [REXML::Element] Returns an element sent to server
+    # @example
+    #   client.say(body: "Thanks", from: "alice@example.com", to: "bob@example.com", type: "chat")
+    def say(options)
+      post Elements::Message.new(
+        body: options[:body],
+        from: options[:from],
+        to: options[:to],
+        type: options[:type],
+      )
+    end
+
     # @return [String] Mention name of this account
     # @example
     #   client.mention_name #=> "alice"
@@ -296,15 +313,6 @@ module Xrc
     # Only supports PLAIN authentication
     def authenticate
       post(Elements::Auth.new(jid: jid, password: password))
-    end
-
-    def say(options)
-      post Elements::Message.new(
-        body: options[:body],
-        from: options[:from],
-        to: options[:to],
-        type: options[:type],
-      )
     end
 
     def start_ping_thread
