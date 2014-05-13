@@ -1,3 +1,6 @@
+## 0.0.4
+* Unescape HTML entities in message body
+
 ## 0.0.3
 * Make Xrc::Client#say public
 
