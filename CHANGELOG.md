@@ -1,3 +1,6 @@
+## 0.0.3
+* Make Xrc::Client#say public
+
 ## 0.0.2
 * Fix authentication timing
 
