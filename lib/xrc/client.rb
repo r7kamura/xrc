@@ -140,7 +140,7 @@ module Xrc
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
         on_replied(element)
       when element.name == "message"
-        on_room_message_received(element)
+        on_message_received(element)
       when element.prefix == "stream" && element.name == "features"
         on_features_received(element)
       when element.name == "proceed" && element.namespace == Namespaces::TLS
@@ -178,7 +178,7 @@ module Xrc
       end
     end
 
-    def on_room_message_received(element)
+    def on_message_received(element)
       case message = MessageBuilder.build(element)
       when Messages::RoomMessage
         on_room_message_block.call(message)
