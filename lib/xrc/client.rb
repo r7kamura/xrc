@@ -191,6 +191,7 @@ module Xrc
           bind
         when feature.name == "starttls" && feature.namespace == Namespaces::TLS
           start_tls
+          break
         when feature.name == "mechanisms" && feature.namespace == Namespaces::SASL
           on_mechanisms_received(feature)
         else
