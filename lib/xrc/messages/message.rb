@@ -1,12 +1,12 @@
 module Xrc
   module Messages
     class Message < Base
-      # Returns the message body (e.g. Hello)
+      # Returns the message body with unescaping HTML.
       # @return [String]
       # @example
       #   message.body #=> "Hello"
       def body
-        @element.elements["body/text()"].to_s
+        CGI.unescape_html(@element.elements["body/text()"].to_s)
       end
 
       # Returns this message in Hash format
