@@ -1,3 +1,6 @@
+## 0.0.5
+* Add attr_writer for Xrc::Jid's attributes
+
 ## 0.0.4
 * Unescape HTML entities in message body
 
