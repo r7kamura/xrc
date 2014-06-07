@@ -32,6 +32,12 @@ module Xrc
       def type
         @element.attribute("type").to_s
       end
+
+      # @return [true, false] True if given message includes delay element
+      # @note See XEP-0203 for more details about Delayed Delivery
+      def delayed?
+        !!@element.elements["delay"]
+      end
     end
   end
 end
