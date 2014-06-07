@@ -1,3 +1,6 @@
+## 0.0.6
+* Add `Xrc::Messages::Base#delayed?` method
+
 ## 0.0.5
 * Add attr_writer for Xrc::Jid's attributes
 
