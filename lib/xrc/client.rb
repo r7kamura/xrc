@@ -170,7 +170,7 @@ module Xrc
 
     # @return [Array<Xrc::Jid>] An array of Room JIDs a client will log in
     def room_jids
-      @room_jids ||= raw_room_jids.map {|raw| JID.new(raw) }
+      @room_jids ||= raw_room_jids.map {|raw| Jid.new(raw) }
     end
 
     def raw_room_jids
