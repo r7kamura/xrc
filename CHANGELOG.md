@@ -1,3 +1,6 @@
+## 0.1.0
+* Support comma-separated multi room JIDs
+
 ## 0.0.6
 * Add `Xrc::Messages::Base#delayed?` method
 

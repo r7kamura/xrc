@@ -12,7 +12,7 @@ client = Xrc::Client.new(
   nickname: "bot"              # optional
   password: "xxx",             # optional
   port: 5222,                  # optional, default: 5222
-  room_jid: "bar@example.com", # optional
+  room_jid: "bar@example.com", # optional, you can pass comma-separated multi room JIDs
 )
 
 # Responds to "ping" and returns "pong".
