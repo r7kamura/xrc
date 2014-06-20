@@ -168,8 +168,13 @@ module Xrc
       @options[:port] || DEFAULT_PORT
     end
 
-    def room_jid
-      Jid.new("#{@options[:room_jid]}") if @options[:room_jid]
+    # @return [Array<Xrc::Jid>] An array of Room JIDs a client will log in
+    def room_jids
+      @room_jids ||= raw_room_jids.map {|raw| JID.new(raw) }
+    end
+
+    def raw_room_jids
+      @options[:room_jid].try(:split, ",") || []
     end
 
     def connection
@@ -243,7 +248,7 @@ module Xrc
     end
 
     def on_connection_established
-      join if room_jid
+      join
       start_ping_thread
     end
 
@@ -295,7 +300,9 @@ module Xrc
     end
 
     def join
-      post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
+      room_jids.each do |room_jid|
+        post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
+      end
     end
 
     def ping
