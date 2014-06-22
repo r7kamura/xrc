@@ -77,6 +77,12 @@ module Xrc
       @on_event_block = block
     end
 
+    # Registers a callback for invitation message
+    # @return [Proc] Returns given block
+    def on_invite(&block)
+      @on_invite_block = block
+    end
+
     # Replies to given message
     # @option options [Xrc::Messages::Base] :to A message object given from server
     # @option options [String] :body A text to be sent to server
@@ -116,6 +122,12 @@ module Xrc
       users[jid].try(:mention_name)
     end
 
+    def join(jids)
+      Array(jids).each do |room_jid|
+        post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
+      end
+    end
+
     private
 
     def on_event_block
@@ -132,6 +144,10 @@ module Xrc
 
     def on_subject_block
       @on_subject_block ||= ->(element) {}
+    end
+
+    def on_invite_block
+      @on_invite_block ||= ->(element) {}
     end
 
     def on_received(element)
@@ -191,6 +207,8 @@ module Xrc
         on_private_message_block.call(message)
       when Messages::Subject
         on_subject_block.call(message)
+      when Messages::Invite
+        on_invite_block.call(message)
       end
     end
 
@@ -248,7 +266,7 @@ module Xrc
     end
 
     def on_connection_established
-      join
+      join(room_jids)
       start_ping_thread
     end
 
@@ -297,12 +315,6 @@ module Xrc
 
     def attend
       post(Elements::Presence.new)
-    end
-
-    def join
-      room_jids.each do |room_jid|
-        post(Elements::Join.new(from: jid.strip, to: "#{room_jid}/#{nickname}"))
-      end
     end
 
     def ping

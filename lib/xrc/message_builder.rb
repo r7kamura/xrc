@@ -26,6 +26,8 @@ module Xrc
         Messages::PrivateMessage
       when has_subject?
         Messages::Subject
+      when has_invite?
+        Messages::Invite
       else
         Messages::Null
       end
@@ -53,6 +55,10 @@ module Xrc
 
     def has_subject?
       !!@element.elements["subject"]
+    end
+
+    def has_invite?
+      !!@element.elements["x/invite"]
     end
 
     def type

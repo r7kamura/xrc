@@ -1,3 +1,6 @@
+## 0.1.1
+* Support invite message
+
 ## 0.1.0
 * Support comma-separated multi room JIDs
 
