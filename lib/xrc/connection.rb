@@ -1,15 +1,16 @@
 module Xrc
   class Connection
-    attr_reader :block, :domain, :port, :socket
+    attr_reader :block, :domain, :hosts, :port, :socket
 
     def initialize(options, &block)
       @domain = options[:domain]
+      @hosts = options[:hosts]
       @port = options[:port]
       @block = block
     end
 
     def connect
-      @socket = Connector.connect(domain: domain, port: port)
+      @socket = Connector.connect(domain: domain, hosts: hosts, port: port)
       start
     end
 

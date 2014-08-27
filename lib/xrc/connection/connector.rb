@@ -9,6 +9,7 @@ module Xrc
 
       def initialize(options)
         @options = options
+        @hosts = nil
       end
 
       def connect
@@ -30,7 +31,11 @@ module Xrc
       end
 
       def hosts
-        HostsResolver.call(domain)
+        unless @hosts
+          @hosts = options[:hosts] || HostsResolver.call(domain)
+        end
+
+        @hosts
       end
 
       def connect_to(host)

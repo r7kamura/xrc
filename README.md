@@ -11,6 +11,7 @@ client = Xrc::Client.new(
   jid: "foo@example.com",      # required
   nickname: "bot"              # optional
   password: "xxx",             # optional
+  hosts: [ "example.com" ],    # optional, automatically determined from JID in absence
   port: 5222,                  # optional, default: 5222
   room_jid: "bar@example.com", # optional, you can pass comma-separated multi room JIDs
 )

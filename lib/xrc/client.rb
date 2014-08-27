@@ -180,6 +180,10 @@ module Xrc
       @options[:nickname]
     end
 
+    def hosts
+      @options[:hosts]
+    end
+
     def port
       @options[:port] || DEFAULT_PORT
     end
@@ -194,7 +198,7 @@ module Xrc
     end
 
     def connection
-      @connection ||= Connection.new(domain: jid.domain, port: port) do |element|
+      @connection ||= Connection.new(domain: jid.domain, hosts: hosts, port: port) do |element|
         on_received(element)
       end
     end
