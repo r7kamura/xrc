@@ -30,7 +30,7 @@ module Xrc
       end
 
       def hosts
-        HostsResolver.call(domain)
+        options[:hosts] || HostsResolver.call(domain)
       end
 
       def connect_to(host)
