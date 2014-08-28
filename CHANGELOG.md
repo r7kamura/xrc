@@ -1,3 +1,6 @@
+## 0.1.2
+* Support hosts option
+
 ## 0.1.1
 * Support invite message
 
