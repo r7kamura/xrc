@@ -1,3 +1,6 @@
+## 0.1.3
+* Fix `room_name` method for invitation message
+
 ## 0.1.2
 * Support hosts option
 
