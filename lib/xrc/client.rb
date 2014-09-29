@@ -25,6 +25,18 @@ module Xrc
       nil
     end
 
+    # Registers a callback called when a client connected to server
+    # @yield Executes a given callback in the Client's context
+    # @return [Proc] Returns given block
+    # @example
+    #   client.on_connection_established do
+    #     puts "connection established!"
+    #   end
+    #
+    def on_connection_established(&block)
+      @on_connection_established_block = block
+    end
+
     # Registers a callback called when client received a new private message (a.k.a. 1vs1 message)
     # @yield Executes a given callback in the Client's context
     # @yieldparam element [Xrc::Message] Represents a given message
@@ -129,6 +141,9 @@ module Xrc
     end
 
     private
+    def on_connection_established_block
+      @on_connection_established_block ||= ->() {}
+    end
 
     def on_event_block
       @on_event_block ||= ->(element) {}
@@ -266,12 +281,9 @@ module Xrc
     def on_roster_received(element)
       @users = Roster.new(element)
       attend
-      on_connection_established
-    end
-
-    def on_connection_established
       join(room_jids)
       start_ping_thread
+      on_connection_established_block.call()
     end
 
     def features
