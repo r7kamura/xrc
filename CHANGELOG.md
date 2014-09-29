@@ -1,3 +1,6 @@
+## 0.1.4
+* Add `on_connection_established` callback
+
 ## 0.1.3
 * Fix `room_name` method for invitation message
 
