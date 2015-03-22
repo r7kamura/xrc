@@ -37,6 +37,7 @@ module Xrc
 
     def characters(text)
       if current
+        text = text.gsub(/(?!\n)[[:cntrl:]]/, "")
         text = REXML::Text.new(text, current.whitespace, nil, true)
         current.add(text)
       end
