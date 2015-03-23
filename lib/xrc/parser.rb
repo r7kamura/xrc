@@ -37,10 +37,20 @@ module Xrc
 
     def characters(text)
       if current
-        text = text.gsub(/(?!\n)[[:cntrl:]]/, "")
-        text = REXML::Text.new(text, current.whitespace, nil, true)
+        text = REXML::Text.new(to_safe(text), current.whitespace, nil, true)
         current.add(text)
       end
+    end
+
+    def to_safe(text)
+      text.chars.map do |c|
+        case c.ord
+        when *REXML::Text::VALID_CHAR
+          c
+        else
+          ""
+        end
+      end.join
     end
 
     def end_document
