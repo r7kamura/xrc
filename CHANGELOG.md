@@ -1,3 +1,6 @@
+## 0.1.5
+* Supress control characters in given message (Thx @masutaka)
+
 ## 0.1.4
 * Add `on_connection_established` callback
 
