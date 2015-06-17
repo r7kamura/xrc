@@ -1,3 +1,7 @@
+## 0.1.6
+* Ignore text node in feature element
+* Provide custom error for authentication failure
+
 ## 0.1.5
 * Supress control characters in given message (Thx @masutaka)
 
