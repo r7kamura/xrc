@@ -246,6 +246,7 @@ module Xrc
     def on_features_received(element)
       element.each do |feature|
         case
+        when feature.is_a?(REXML::Text)
         when feature.name == "bind" && feature.namespace == Namespaces::BIND
           bind
         when feature.name == "starttls" && feature.namespace == Namespaces::TLS
