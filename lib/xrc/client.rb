@@ -1,3 +1,5 @@
+require "xrc/errors"
+
 module Xrc
   class Client
     DEFAULT_PORT = 5222
@@ -265,7 +267,7 @@ module Xrc
     end
 
     def on_authentication_failed(element)
-      raise AuthenticationFailureError, "Received an authentication failure response from XMPP server"
+      raise Errors::AuthenticationFailureError, "Received an authentication failure response from XMPP server"
     end
 
     def on_tls_proceeded(element)
