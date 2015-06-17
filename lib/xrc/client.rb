@@ -265,7 +265,7 @@ module Xrc
     end
 
     def on_authentication_failed(element)
-      raise NotImplementedError
+      raise AuthenticationFailureError, "Received an authentication failure response from XMPP server"
     end
 
     def on_tls_proceeded(element)
