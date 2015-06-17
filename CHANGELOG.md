@@ -1,3 +1,6 @@
+## 0.1.7
+* Fix error class loading problem
+
 ## 0.1.6
 * Ignore text node in feature element
 * Provide custom error for authentication failure
