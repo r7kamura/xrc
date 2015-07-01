@@ -234,7 +234,7 @@ module Xrc
     end
 
     def on_bound(element)
-      @jid = Jid.new(element.elements["/bind/jid/text()"].value)
+      @jid = Jid.new(element.elements["/*[local-name()='bind']/jid/text()"].value)
       establish_session
       require_roster
     end
