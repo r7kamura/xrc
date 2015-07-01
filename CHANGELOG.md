@@ -1,3 +1,6 @@
+## 0.1.8
+* Always add id attribute on all post message
+
 ## 0.1.7
 * Fix error class loading problem
 
