@@ -306,9 +306,9 @@ module Xrc
     end
 
     def post(element, &block)
+      id = generate_id
+      element.add_attributes("id" => id)
       if block
-        id = generate_id
-        element.add_attributes("id" => id)
         reply_callbacks[id] = block
       end
       connection.write(element)
