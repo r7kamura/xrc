@@ -168,6 +168,7 @@ module Xrc
     end
 
     def on_received(element)
+      puts element
       on_event_block.call(element)
       case
       when element.attribute("id") && has_reply_callbacks_to?(element.attribute("id").value)
@@ -312,6 +313,8 @@ module Xrc
         reply_callbacks[id] = block
       end
       connection.write(element)
+      puts element
+      puts
       element
     end
 
