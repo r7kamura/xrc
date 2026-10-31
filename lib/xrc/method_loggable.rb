@@ -1,4 +1,3 @@
-require "active_support/core_ext/module/aliasing"
 require "active_support/logger"
 
 module Xrc
@@ -16,7 +15,8 @@ module Xrc
         Xrc::MethodLoggable.logger.info(instance_exec(*args, &block))
         __send__("#{method_name}_without_log", *args)
       end
-      alias_method_chain method_name, :log
+      alias_method "#{method_name}_without_log", method_name
+      alias_method method_name, "#{method_name}_with_log"
     end
   end
 end
